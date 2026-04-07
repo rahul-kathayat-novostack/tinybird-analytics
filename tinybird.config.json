@@ -1,0 +1,8 @@
+{
+  "include": [
+    "src/lib/tinybird.ts"
+  ],
+  "token": "${TINYBIRD_TOKEN}",
+  "baseUrl": "https://api.eu-central-1.aws.tinybird.co",
+  "devMode": "branch"
+}
