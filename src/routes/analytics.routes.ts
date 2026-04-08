@@ -23,9 +23,11 @@ router.post("/analytics", async (req: Request, res: Response): Promise<void> => 
   }
 });
 
-router.get("/stats", async (_req: Request, res: Response): Promise<void> => {
+router.get("/stats/:workspaceId/:collectionId", async (req: Request, res: Response): Promise<void> => {
   try {
-    const analytics = await getAnalytics();
+    const { workspaceId, collectionId } = req.params;
+
+    const analytics = await getAnalytics(workspaceId as string, collectionId as string);
     res.status(200).json(analytics);
   } catch (err) {
     const message = err instanceof Error ? err.message : "Internal server error";

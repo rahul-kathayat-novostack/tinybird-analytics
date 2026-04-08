@@ -2,6 +2,8 @@ export interface AnalyticsEvent {
   timestamp: string;
   action: string;
   version: string;
+  workspace_id: string;
+  collection_id: string;
   session_id: string;
   payload: string;
 }
@@ -54,6 +56,8 @@ export interface StoredEvent {
   action: string;
   version: string;
   session_id: string;
+  workspace_id: string;
+  collection_id: string;
   pathname: string;
   domains: string;
   referrer: string;
