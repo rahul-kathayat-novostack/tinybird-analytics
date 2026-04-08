@@ -11,7 +11,7 @@ export interface ParsedPayload {
   locale?: string;
   referrer?: string;
   pathname?: string;
-  href?: string;
+  domains?: string;
 }
 
 export interface PageVisit {
@@ -53,7 +53,7 @@ export interface StoredEvent {
   version: string;
   session_id: string;
   pathname: string;
-  href: string;
+  domains: string;
   referrer: string;
   user_agent: string;
   locale: string;
