@@ -1,0 +1,14 @@
+{
+    "host": "https://api.eu-central-1.aws.tinybird.co",
+    "id": "aeccc3bd-7fc6-430a-8e0f-2879694252c5",
+    "name": "techops_workspace",
+    "scope": "user",
+    "token": "p.eyJ1IjogImFlY2NjM2JkLTdmYzYtNDMwYS04ZTBmLTI4Nzk2OTQyNTJjNSIsICJpZCI6ICJhNWE4MTQ0NC1iNWE5LTQ5MTgtYWZjYi0yNDI3M2Q2ZjY0ZmQiLCAiaG9zdCI6ICJhd3MtZXUtY2VudHJhbC0xIn0.41FQDejmwZtgGqIieBsb7cK7_OFNGb9qTN0t_VPxDnc",
+    "tokens": {
+        "https://api.eu-central-1.aws.tinybird.co": "p.eyJ1IjogImFlY2NjM2JkLTdmYzYtNDMwYS04ZTBmLTI4Nzk2OTQyNTJjNSIsICJpZCI6ICJhNWE4MTQ0NC1iNWE5LTQ5MTgtYWZjYi0yNDI3M2Q2ZjY0ZmQiLCAiaG9zdCI6ICJhd3MtZXUtY2VudHJhbC0xIn0.41FQDejmwZtgGqIieBsb7cK7_OFNGb9qTN0t_VPxDnc"
+    },
+    "user_email": "rahul.kathayat@novostack.com",
+    "user_id": "96f4b881-75c5-47c2-b99f-8808f5db3618",
+    "user_token": "p.eyJ1IjogIjk2ZjRiODgxLTc1YzUtNDdjMi1iOTlmLTg4MDhmNWRiMzYxOCIsICJpZCI6ICIxMTM2YjY1Ny03NmQwLTQzZTktODgzZS01NDNkOWM3MjU2MDIiLCAiaG9zdCI6ICJhd3MtZXUtY2VudHJhbC0xIn0.7SuLHKt1ns5VMZLFcI63g5GhTDX4rqNl02Qd7XEeiFU",
+    "version": "4.4.1"
+}

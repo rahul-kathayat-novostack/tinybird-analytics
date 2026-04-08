@@ -15,7 +15,7 @@ export const insertEvent = async (event: AnalyticsEvent): Promise<void> => {
     action: event.action,
     version: event.version,
     pathname: parsed.pathname || "",
-    href: parsed.href || "",
+    domains: parsed.domains || "",
     referrer: parsed.referrer || null,
     user_agent: parsed["user-agent"] || "",
     locale: parsed.locale || "",
