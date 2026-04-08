@@ -194,5 +194,5 @@ const project = defineProject({
   },
 });
 
-// Casting to any to bypass internal SDK variance issues during typed client export
+// Export the tinybird client
 export const tinybird = project.tinybird as any;

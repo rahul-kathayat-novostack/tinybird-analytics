@@ -5,3 +5,6 @@ data/*.db-wal
 data/*.db-shm
 .env.local
 node_modules
+
+.vercel
+pnpm-lock.yaml
