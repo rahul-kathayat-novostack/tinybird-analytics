@@ -12,6 +12,8 @@ export interface ParsedPayload {
   referrer?: string;
   pathname?: string;
   domains?: string;
+  href?: string;
+  location?: string;
 }
 
 export interface PageVisit {

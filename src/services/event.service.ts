@@ -2,12 +2,15 @@ import { tinybird } from "../lib/tinybird.js";
 import { AnalyticsEvent } from "../types/analytics.types.js";
 import { parsePayload } from "../utils/payload-parser.js";
 import { parseDevice } from "../utils/device-parser.js";
-import { getCountryFromLocale } from "../utils/geo-lookup.js";
+import { getCountryName } from "../utils/geo-lookup.js";
 
 export const insertEvent = async (event: AnalyticsEvent): Promise<void> => {
   const parsed = parsePayload(event.payload);
   const device = parseDevice(parsed["user-agent"] || "");
-  const country = getCountryFromLocale(parsed.locale || "");
+  
+  // Normalize country: Priority to location code, then fallback to locale
+  const rawCountry = parsed.location || parsed.locale || "";
+  const country = getCountryName(rawCountry);
 
   await tinybird.pageViews.ingest({
     timestamp: event.timestamp || new Date().toISOString(),
@@ -15,7 +18,7 @@ export const insertEvent = async (event: AnalyticsEvent): Promise<void> => {
     action: event.action,
     version: event.version,
     pathname: parsed.pathname || "",
-    domains: parsed.domains || "",
+    domains: parsed.href || parsed.domains || "",
     referrer: parsed.referrer || null,
     user_agent: parsed["user-agent"] || "",
     locale: parsed.locale || "",

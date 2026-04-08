@@ -1,14 +1,15 @@
-export const getCountryFromLocale = (locale: string): string => {
-  if (!locale) return "Unknown";
+export const getCountryName = (codeOrLocale: string): string => {
+  if (!codeOrLocale) return "Unknown";
 
-  const parts = locale.split("-");
-  const regionCode = parts.length > 1 ? parts[1].toUpperCase() : parts[0].toUpperCase();
+  // Handle both locale (en-US) and direct code (US)
+  const parts = codeOrLocale.split("-");
+  const code = (parts.length > 1 ? parts[1] : parts[0]).toUpperCase();
 
   try {
     const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
-    const country = regionNames.of(regionCode);
-    return country || regionCode;
+    const name = regionNames.of(code);
+    return name || code;
   } catch {
-    return regionCode;
+    return code;
   }
 };

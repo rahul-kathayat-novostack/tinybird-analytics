@@ -41,10 +41,22 @@ export const getAnalytics = async (): Promise<AnalyticsResponse> => {
       pathname: row.pathname,
       views: Number(row.views),
     })) as PageVisit[],
-    visitors_per_country: countriesResult.data.map((row: any) => ({
-      country: row.country,
-      visitors: Number(row.visitors),
-    })) as CountryVisitor[],
+    visitors_per_country: countriesResult.data.map((row: any) => {
+      const code = row.country;
+      let name = code;
+      try {
+        if (code && code.length === 2) {
+          const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
+          name = regionNames.of(code.toUpperCase()) || code;
+        }
+      } catch {
+        // Fallback to code if transformation fails
+      }
+      return {
+        country: name,
+        visitors: Number(row.visitors),
+      };
+    }) as CountryVisitor[],
     visitors_per_device: devicesResult.data.map((row: any) => ({
       device: row.device,
       visitors: Number(row.visitors),
