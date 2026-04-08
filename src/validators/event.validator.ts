@@ -4,6 +4,8 @@ const REQUIRED_FIELDS: (keyof AnalyticsEvent)[] = [
   "timestamp",
   "action",
   "version",
+  "workspace_id",
+  "collection_id",
   "session_id",
   "payload",
 ];
@@ -14,6 +16,20 @@ export const validateEvent = (body: Record<string, unknown> | undefined): { isVa
   }
 
   for (const field of REQUIRED_FIELDS) {
+    if (field === "workspace_id") {
+      if (!body.workspace_id && !body.workspaceId) {
+        return { isValid: false, error: "Missing required field: workspace_id or workspaceId" };
+      }
+      continue;
+    }
+    
+    if (field === "collection_id") {
+      if (!body.collection_id && !body.collectionId) {
+        return { isValid: false, error: "Missing required field: collection_id or collectionId" };
+      }
+      continue;
+    }
+
     if (!body[field] || typeof body[field] !== "string") {
       return { isValid: false, error: `Missing or invalid field: ${field}` };
     }

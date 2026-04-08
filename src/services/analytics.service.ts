@@ -7,7 +7,10 @@ import {
   TimeVisitor,
 } from "../types/analytics.types.js";
 
-export const getAnalytics = async (): Promise<AnalyticsResponse> => {
+export const getAnalytics = async (
+  workspaceId: string = "",
+  collectionId: string = ""
+): Promise<AnalyticsResponse> => {
   // Parallel fetch for efficiency
   const [
     kpisResult,
@@ -16,11 +19,11 @@ export const getAnalytics = async (): Promise<AnalyticsResponse> => {
     devicesResult,
     trendsResult,
   ] = await Promise.all([
-    tinybird.mainKpis.query(),
-    tinybird.topPages.query(),
-    tinybird.topCountries.query(),
-    tinybird.topDevices.query(),
-    tinybird.visitorsOverTime.query(),
+    tinybird.mainKpis.query({ workspace_id: workspaceId, collection_id: collectionId }),
+    tinybird.topPages.query({ workspace_id: workspaceId, collection_id: collectionId }),
+    tinybird.topCountries.query({ workspace_id: workspaceId, collection_id: collectionId }),
+    tinybird.topDevices.query({ workspace_id: workspaceId, collection_id: collectionId }),
+    tinybird.visitorsOverTime.query({ workspace_id: workspaceId, collection_id: collectionId }),
   ]);
 
   const kpis = kpisResult.data[0] || {

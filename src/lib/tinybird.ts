@@ -4,6 +4,7 @@ import {
   defineProject,
   node,
   t,
+  p,
   engine,
 } from "@tinybirdco/sdk";
 
@@ -18,6 +19,8 @@ export const pageViews = defineDatasource("analytics", {
   description: "Comprehensive analytics tracking data",
   schema: {
     timestamp: t.dateTime(),
+    workspace_id: t.string(),
+    collection_id: t.string(),
     session_id: t.string(),
     action: t.string(),
     version: t.string(),
@@ -30,8 +33,24 @@ export const pageViews = defineDatasource("analytics", {
     country: t.string(),
   },
   engine: engine.mergeTree({
-    sortingKey: ["pathname", "timestamp"],
+    sortingKey: ["workspace_id", "collection_id", "timestamp"],
   }),
+  forwardQuery: `
+    SELECT 
+      timestamp, 
+      defaultValueOfTypeName('String') AS workspace_id, 
+      defaultValueOfTypeName('String') AS collection_id, 
+      session_id, 
+      action, 
+      version, 
+      pathname, 
+      domains, 
+      referrer, 
+      user_agent, 
+      locale, 
+      device, 
+      country
+  `,
 });
 
 // ============================================================================
@@ -42,7 +61,10 @@ export const pageViews = defineDatasource("analytics", {
  * Top level metrics for the dashboard
  */
 export const mainKpis = defineEndpoint("main_kpis", {
-  params: {},
+  params: {
+    workspace_id: p.string(),
+    collection_id: p.string(),
+  },
   nodes: [
     node({
       name: "sessions",
@@ -53,6 +75,8 @@ export const mainKpis = defineEndpoint("main_kpis", {
           min(timestamp) AS start_time,
           max(timestamp) AS end_time
         FROM analytics
+        WHERE workspace_id = {{workspace_id}} 
+          AND collection_id = {{collection_id}}
         GROUP BY session_id
       `,
     }),
@@ -82,7 +106,10 @@ export const mainKpis = defineEndpoint("main_kpis", {
  * Pages breakdown
  */
 export const topPages = defineEndpoint("top_pages", {
-  params: {},
+  params: {
+    workspace_id: p.string(),
+    collection_id: p.string(),
+  },
   nodes: [
     node({
       name: "aggregated",
@@ -91,7 +118,10 @@ export const topPages = defineEndpoint("top_pages", {
           pathname,
           count() AS views
         FROM analytics
-        WHERE action = 'page_hit' AND pathname != ''
+        WHERE workspace_id = {{workspace_id}} 
+          AND collection_id = {{collection_id}}
+          AND action = 'page_hit' 
+          AND pathname != ''
         GROUP BY pathname
         ORDER BY views DESC
         LIMIT 10
@@ -108,7 +138,10 @@ export const topPages = defineEndpoint("top_pages", {
  * Geo breakdown
  */
 export const topCountries = defineEndpoint("top_countries", {
-  params: {},
+  params: {
+    workspace_id: p.string(),
+    collection_id: p.string(),
+  },
   nodes: [
     node({
       name: "aggregated",
@@ -117,7 +150,9 @@ export const topCountries = defineEndpoint("top_countries", {
           country,
           uniq(session_id) AS visitors
         FROM analytics
-        WHERE country != ''
+        WHERE workspace_id = {{workspace_id}} 
+          AND collection_id = {{collection_id}}
+          AND country != ''
         GROUP BY country
         ORDER BY visitors DESC
         LIMIT 10
@@ -134,7 +169,10 @@ export const topCountries = defineEndpoint("top_countries", {
  * Device breakdown
  */
 export const topDevices = defineEndpoint("top_devices", {
-  params: {},
+  params: {
+    workspace_id: p.string(),
+    collection_id: p.string(),
+  },
   nodes: [
     node({
       name: "aggregated",
@@ -143,7 +181,9 @@ export const topDevices = defineEndpoint("top_devices", {
           device,
           uniq(session_id) AS visitors
         FROM analytics
-        WHERE device != ''
+        WHERE workspace_id = {{workspace_id}} 
+          AND collection_id = {{collection_id}}
+          AND device != ''
         GROUP BY device
         ORDER BY visitors DESC
       `,
@@ -159,7 +199,10 @@ export const topDevices = defineEndpoint("top_devices", {
  * Visitors over time
  */
 export const visitorsOverTime = defineEndpoint("visitors_over_time", {
-  params: {},
+  params: {
+    workspace_id: p.string(),
+    collection_id: p.string(),
+  },
   nodes: [
     node({
       name: "aggregated",
@@ -168,6 +211,8 @@ export const visitorsOverTime = defineEndpoint("visitors_over_time", {
           toDate(timestamp) AS date,
           uniq(session_id) AS visitors
         FROM analytics
+        WHERE workspace_id = {{workspace_id}} 
+          AND collection_id = {{collection_id}}
         GROUP BY date
         ORDER BY date ASC
       `,
