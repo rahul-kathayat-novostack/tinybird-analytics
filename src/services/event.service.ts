@@ -29,8 +29,8 @@ export const insertEvent = async (event: AnalyticsEvent): Promise<void> => {
 
   await tinybird.pageViews.ingest({
     timestamp: event.timestamp || new Date().toISOString(),
-    workspace_id: event.workspace_id || (event as any).workspaceId || "",
-    collection_id: event.collection_id || (event as any).collectionId || "",
+    workspace_id: event.workspace_id || "",
+    collection_id: event.collection_id || "",
     session_id: event.session_id,
     action: event.action,
     version: event.version,
@@ -41,6 +41,13 @@ export const insertEvent = async (event: AnalyticsEvent): Promise<void> => {
     locale: parsed.locale || "",
     device,
     country,
+    payload: JSON.stringify({
+      ...event,
+      pathname,
+      device,
+      country,
+      ...parsed
+    }),
   });
 
   // Update cache with current timestamp after successful ingestion

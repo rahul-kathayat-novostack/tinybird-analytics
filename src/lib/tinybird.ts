@@ -38,8 +38,8 @@ export const pageViews = defineDatasource("analytics", {
   forwardQuery: `
     SELECT 
       timestamp, 
-      defaultValueOfTypeName('String') AS workspace_id, 
-      defaultValueOfTypeName('String') AS collection_id, 
+      workspace_id, 
+      collection_id, 
       session_id, 
       action, 
       version, 
@@ -75,8 +75,8 @@ export const mainKpis = defineEndpoint("main_kpis", {
           min(timestamp) AS start_time,
           max(timestamp) AS end_time
         FROM analytics
-        WHERE workspace_id = {{workspace_id}} 
-          AND collection_id = {{collection_id}}
+        WHERE ({{workspace_id}} = '' OR workspace_id = {{workspace_id}})
+          AND ({{collection_id}} = '' OR collection_id = {{collection_id}})
         GROUP BY session_id
       `,
     }),
@@ -102,9 +102,6 @@ export const mainKpis = defineEndpoint("main_kpis", {
   }
 });
 
-/**
- * Pages breakdown
- */
 export const topPages = defineEndpoint("top_pages", {
   params: {
     workspace_id: p.string(),
@@ -118,8 +115,8 @@ export const topPages = defineEndpoint("top_pages", {
           pathname,
           count() AS views
         FROM analytics
-        WHERE workspace_id = {{workspace_id}} 
-          AND collection_id = {{collection_id}}
+        WHERE ({{workspace_id}} = '' OR workspace_id = {{workspace_id}})
+          AND ({{collection_id}} = '' OR collection_id = {{collection_id}})
           AND action = 'page_hit' 
           AND pathname != ''
         GROUP BY pathname
@@ -150,8 +147,8 @@ export const topCountries = defineEndpoint("top_countries", {
           country,
           uniq(session_id) AS visitors
         FROM analytics
-        WHERE workspace_id = {{workspace_id}} 
-          AND collection_id = {{collection_id}}
+        WHERE ({{workspace_id}} = '' OR workspace_id = {{workspace_id}})
+          AND ({{collection_id}} = '' OR collection_id = {{collection_id}})
           AND country != ''
         GROUP BY country
         ORDER BY visitors DESC
@@ -181,8 +178,8 @@ export const topDevices = defineEndpoint("top_devices", {
           device,
           uniq(session_id) AS visitors
         FROM analytics
-        WHERE workspace_id = {{workspace_id}} 
-          AND collection_id = {{collection_id}}
+        WHERE ({{workspace_id}} = '' OR workspace_id = {{workspace_id}})
+          AND ({{collection_id}} = '' OR collection_id = {{collection_id}})
           AND device != ''
         GROUP BY device
         ORDER BY visitors DESC
@@ -211,8 +208,8 @@ export const visitorsOverTime = defineEndpoint("visitors_over_time", {
           toDate(timestamp) AS date,
           uniq(session_id) AS visitors
         FROM analytics
-        WHERE workspace_id = {{workspace_id}} 
-          AND collection_id = {{collection_id}}
+        WHERE ({{workspace_id}} = '' OR workspace_id = {{workspace_id}})
+          AND ({{collection_id}} = '' OR collection_id = {{collection_id}})
         GROUP BY date
         ORDER BY date ASC
       `,

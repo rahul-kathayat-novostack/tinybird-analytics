@@ -8,8 +8,8 @@ import {
 } from "../types/analytics.types.js";
 
 export const getAnalytics = async (
-  workspaceId: string = "",
-  collectionId: string = ""
+  workspace_id: string = "",
+  collection_id: string = ""
 ): Promise<AnalyticsResponse> => {
   // Parallel fetch for efficiency
   const [
@@ -19,11 +19,11 @@ export const getAnalytics = async (
     devicesResult,
     trendsResult,
   ] = await Promise.all([
-    tinybird.mainKpis.query({ workspace_id: workspaceId, collection_id: collectionId }),
-    tinybird.topPages.query({ workspace_id: workspaceId, collection_id: collectionId }),
-    tinybird.topCountries.query({ workspace_id: workspaceId, collection_id: collectionId }),
-    tinybird.topDevices.query({ workspace_id: workspaceId, collection_id: collectionId }),
-    tinybird.visitorsOverTime.query({ workspace_id: workspaceId, collection_id: collectionId }),
+    tinybird.mainKpis.query({ workspace_id, collection_id }),
+    tinybird.topPages.query({ workspace_id, collection_id }),
+    tinybird.topCountries.query({ workspace_id, collection_id }),
+    tinybird.topDevices.query({ workspace_id, collection_id }),
+    tinybird.visitorsOverTime.query({ workspace_id, collection_id }),
   ]);
 
   const kpis = kpisResult.data[0] || {

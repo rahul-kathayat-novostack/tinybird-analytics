@@ -14,7 +14,7 @@ app.use(express.json());
 app.use("/api", analyticsRoutes);
 
 app.listen(PORT, () => {
-  console.log(`Analytics API running on http://localhost:${PORT}`);
+  console.log(`Analytics running on http://localhost:${PORT}`);
 });
 
 export default app;

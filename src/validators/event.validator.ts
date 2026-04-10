@@ -17,15 +17,15 @@ export const validateEvent = (body: Record<string, unknown> | undefined): { isVa
 
   for (const field of REQUIRED_FIELDS) {
     if (field === "workspace_id") {
-      if (!body.workspace_id && !body.workspaceId) {
-        return { isValid: false, error: "Missing required field: workspace_id or workspaceId" };
+      if (!body.workspace_id) {
+        return { isValid: false, error: "Missing required field: workspace_id" };
       }
       continue;
     }
     
     if (field === "collection_id") {
-      if (!body.collection_id && !body.collectionId) {
-        return { isValid: false, error: "Missing required field: collection_id or collectionId" };
+      if (!body.collection_id) {
+        return { isValid: false, error: "Missing required field: collection_id" };
       }
       continue;
     }

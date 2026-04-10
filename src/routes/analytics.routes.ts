@@ -10,8 +10,8 @@ router.post("/analytics", async (req: Request, res: Response): Promise<void> => 
   // Consolidate identifiers from query parameters and body
   const eventBody = {
     ...(req.body || {}),
-    workspace_id: req.query.workspaceId || req.query.workspace_id || req.body?.workspace_id,
-    collection_id: req.query.collectionId || req.query.collection_id || req.body?.collection_id,
+    workspace_id: req.query.workspace_id || req.body?.workspace_id,
+    collection_id: req.query.collection_id || req.body?.collection_id,
   };
 
   const validation = validateEvent(eventBody);
@@ -30,11 +30,12 @@ router.post("/analytics", async (req: Request, res: Response): Promise<void> => 
   }
 });
 
-router.get("/stats/:workspaceId/:collectionId", async (req: Request, res: Response): Promise<void> => {
+router.get("/stats", async (req: Request, res: Response): Promise<void> => {
   try {
-    const { workspaceId, collectionId } = req.params;
+    const workspace_id = req.query.workspace_id as string;
+    const collection_id = req.query.collection_id as string;
 
-    const analytics = await getAnalytics(workspaceId as string, collectionId as string);
+    const analytics = await getAnalytics(workspace_id, collection_id);
     res.status(200).json(analytics);
   } catch (err) {
     const message = err instanceof Error ? err.message : "Internal server error";
