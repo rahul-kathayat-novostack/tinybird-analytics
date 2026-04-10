@@ -7,7 +7,14 @@ import { AnalyticsEvent } from "../types/analytics.types.js";
 const router = Router();
 
 router.post("/analytics", async (req: Request, res: Response): Promise<void> => {
-  const validation = validateEvent(req.body);
+  // Consolidate identifiers from query parameters and body
+  const eventBody = {
+    ...(req.body || {}),
+    workspace_id: req.query.workspace_id || req.body?.workspace_id,
+    collection_id: req.query.collection_id || req.body?.collection_id,
+  };
+
+  const validation = validateEvent(eventBody);
 
   if (!validation.isValid) {
     res.status(400).json({ error: validation.error });
@@ -15,7 +22,7 @@ router.post("/analytics", async (req: Request, res: Response): Promise<void> => 
   }
 
   try {
-    await insertEvent(req.body as AnalyticsEvent);
+    await insertEvent(eventBody as AnalyticsEvent);
     res.status(201).json({ success: true });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Internal server error";
@@ -23,11 +30,12 @@ router.post("/analytics", async (req: Request, res: Response): Promise<void> => 
   }
 });
 
-router.get("/stats/:workspaceId/:collectionId", async (req: Request, res: Response): Promise<void> => {
+router.get("/stats", async (req: Request, res: Response): Promise<void> => {
   try {
-    const { workspaceId, collectionId } = req.params;
+    const workspace_id = req.query.workspace_id as string;
+    const collection_id = req.query.collection_id as string;
 
-    const analytics = await getAnalytics(workspaceId as string, collectionId as string);
+    const analytics = await getAnalytics(workspace_id, collection_id);
     res.status(200).json(analytics);
   } catch (err) {
     const message = err instanceof Error ? err.message : "Internal server error";
